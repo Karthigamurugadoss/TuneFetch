@@ -25,6 +25,7 @@ from ytmusicapi import YTMusic
 from mutagen.flac import FLAC, Picture
 from mutagen.id3 import APIC, ID3, TALB, TDRC, TIT2, TPE1, TRCK
 from mutagen.mp4 import MP4, MP4Cover
+from mutagen.wave import WAVE
 
 app = Flask(__name__)
 
@@ -218,11 +219,17 @@ def tag_file(path, track, cover_url, fmt):
             cover = None
     artist = ", ".join(track["artists"])
     try:
-        if fmt == "mp3":
-            try:
-                tags = ID3(path)
-            except Exception:
-                tags = ID3()
+        if fmt in ("mp3", "wav"):
+            if fmt == "wav":
+                wav = WAVE(path)
+                if wav.tags is None:
+                    wav.add_tags()
+                tags = wav.tags
+            else:
+                try:
+                    tags = ID3(path)
+                except Exception:
+                    tags = ID3()
             tags.add(TIT2(encoding=3, text=track["title"]))
             tags.add(TPE1(encoding=3, text=artist))
             if track.get("album"):
@@ -232,11 +239,15 @@ def tag_file(path, track, cover_url, fmt):
             tags.add(TRCK(encoding=3, text=str(track["number"])))
             if cover:
                 tags.add(APIC(encoding=3, mime="image/jpeg", type=3, desc="Cover", data=cover))
-            tags.save(path, v2_version=3)
+            if fmt == "wav":
+                wav.save()
+            else:
+                tags.save(path, v2_version=3)
         elif fmt == "m4a":
             mp4 = MP4(path)
             mp4["\xa9nam"] = [track["title"]]
             mp4["\xa9ART"] = [artist]
+            mp4["trkn"] = [(int(track["number"]), 0)]
             if track.get("album"):
                 mp4["\xa9alb"] = [track["album"]]
             if track.get("year"):
@@ -248,6 +259,7 @@ def tag_file(path, track, cover_url, fmt):
             audio = FLAC(path)
             audio["title"] = track["title"]
             audio["artist"] = artist
+            audio["tracknumber"] = str(track["number"])
             if track.get("album"):
                 audio["album"] = track["album"]
             if track.get("year"):
@@ -366,8 +378,9 @@ def prepare_and_run(job, urls, selected):
             if selected and len(urls) == 1:
                 chosen = [t for t in chosen if t["id"] in selected]
             for t in chosen:
-                if info["type"] != "song":
-                    t["album"] = info["name"] if info["type"] == "album" else ""
+                if info["type"] == "album":
+                    t["album"] = info["name"]
+                    t["cover"] = info["cover"]
                 tracks.append(t)
         if not tracks:
             raise RuntimeError("No tracks found. The link may be private or empty.")
@@ -383,6 +396,7 @@ def prepare_and_run(job, urls, selected):
 
 
 def cleanup_old_jobs():
+    """Delete job folders older than KEEP_HOURS and forget jobs whose files are gone."""
     cutoff = time.time() - KEEP_HOURS * 3600
     for name in os.listdir(DOWNLOAD_DIR):
         path = os.path.join(DOWNLOAD_DIR, name)
@@ -391,6 +405,9 @@ def cleanup_old_jobs():
                 shutil.rmtree(path, ignore_errors=True)
         except OSError:
             pass
+    with jobs_lock:
+        for job_id in [j for j, job in jobs.items() if not os.path.isdir(job["dir"])]:
+            del jobs[job_id]
 
 
 # ───────────────────────── routes ─────────────────────────
@@ -449,6 +466,7 @@ def start_download():
     if not FFMPEG_DIR:
         return jsonify({"success": False, "message": "ffmpeg is not installed. Install it with: winget install Gyan.FFmpeg (then restart the app)."})
 
+    cleanup_old_jobs()
     job_id = uuid.uuid4().hex[:12]
     job_dir = os.path.join(DOWNLOAD_DIR, job_id)
     os.makedirs(job_dir, exist_ok=True)

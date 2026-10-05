@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python"></a>
   <a href="https://flask.palletsprojects.com"><img src="https://img.shields.io/badge/Flask-Web_Framework-000000?logo=flask&logoColor=white" alt="Flask"></a>
   <a href="https://github.com/yt-dlp/yt-dlp"><img src="https://img.shields.io/badge/yt--dlp-Media_Engine-FF0000?logo=youtube&logoColor=white" alt="yt-dlp"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
@@ -31,17 +31,17 @@ Spotify link ─► metadata (title, artist, album, year, cover)
 - **Tracks, albums and playlists** — paste any Spotify URL
 - **Formats** — MP3, M4A, FLAC and WAV
 - **Bitrate choice** — 128 / 192 / 256 / 320 kbps for MP3 and M4A
-- **Tagged files** — title, artist, album, year, track number and embedded cover art
+- **Tagged files** — title, artist, track number and embedded cover art in every format; album name for album links, and release year when Spotify provides it (single tracks)
 - **Smart matching** — picks the closest YouTube Music result by title and duration
 - **Live progress** — per-track status, cancel and retry
 - **ZIP download** — grab a whole album or playlist in one archive
-- **Automatic cleanup** — finished jobs are removed after 24 hours
+- **Automatic cleanup** — download folders older than 24 hours are deleted on startup and whenever a new download starts
 
 ## Getting started
 
 ### Requirements
 
-- Python 3.8+
+- Python 3.10+
 - [ffmpeg](https://ffmpeg.org/) available on your `PATH`
 
 Install ffmpeg on Windows with:
@@ -64,7 +64,7 @@ Then open <http://127.0.0.1:5000> in your browser.
 ## Usage
 
 1. Paste a Spotify track, album or playlist link.
-2. Click fetch to preview the tracks.
+2. Click **Preview** to see the tracks and untick any you don't want.
 3. Choose a format and bitrate.
 4. Start the download, then save files individually or as a ZIP.
 
