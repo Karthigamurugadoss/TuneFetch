@@ -1,0 +1,33 @@
+name: Bug report
+description: Something is not working as expected
+labels: [bug]
+body:
+  - type: dropdown
+    id: link-type
+    attributes:
+      label: Spotify link type
+      options: [Track, Album, Playlist, Bulk (several links)]
+    validations:
+      required: true
+  - type: dropdown
+    id: format
+    attributes:
+      label: Output format
+      options: [MP3, M4A, FLAC, WAV]
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what did you see instead? Include any error message from the app or terminal.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version and ffmpeg version
+      placeholder: "Windows 11, Python 3.13, ffmpeg 7.1"
+    validations:
+      required: true
