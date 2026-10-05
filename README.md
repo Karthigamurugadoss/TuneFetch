@@ -35,16 +35,36 @@ It needs **no Spotify account, no Premium subscription and no API keys**. Everyt
 
 > **Disclaimer:** TuneFetch is for personal and educational use. Only download music you own or have permission to use, and respect Spotify's and YouTube's terms of service and your local copyright law. TuneFetch is not affiliated with or endorsed by Spotify.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/home.png" alt="TuneFetch home screen: paste a Spotify link, choose MP3, M4A, FLAC or WAV, and download" width="100%">
+</p>
+
+<table>
+  <tr>
+    <td width="50%" align="center"><img src="docs/screenshots/preview.png" alt="Preview a Spotify album and choose which tracks to download"><br><sub><b>Preview an album or playlist</b> and untick tracks you don't want</sub></td>
+    <td width="50%" align="center"><img src="docs/screenshots/downloading.png" alt="Live per-track download progress with cancel button"><br><sub><b>Live progress</b> for every track, with cancel</sub><br><br><img src="docs/screenshots/complete.png" alt="Download complete with per-track save buttons and Download all as ZIP"><br><sub><b>Save tracks</b> one by one or as a single ZIP</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><img src="docs/screenshots/bulk.png" alt="Bulk mode: paste many Spotify links at once and pick FLAC"><br><sub><b>Bulk mode</b> for many links at once</sub></td>
+    <td width="50%" align="center"><img src="docs/screenshots/mobile.png" alt="TuneFetch on a phone" width="260"><br><sub><b>Responsive</b> on phones and tablets</sub></td>
+  </tr>
+</table>
+
 ## Table of contents
 
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [How it works](#how-it-works)
 - [Installation](#installation)
 - [How to download a Spotify playlist to MP3](#how-to-download-a-spotify-playlist-to-mp3)
 - [Supported formats and quality](#supported-formats-and-quality)
 - [FAQ](#faq)
+- [Known limitations](#known-limitations)
 - [Project structure](#project-structure)
 - [Tech stack](#tech-stack)
+- [Acknowledgements](#acknowledgements)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -156,6 +176,14 @@ Laws differ by country. TuneFetch is meant for personal use with music you have 
 ### Does it work on macOS and Linux?
 It is developed and tested on Windows. It is pure Python and uses ffmpeg, so it should work on macOS and Linux too. Bug reports for other systems are welcome.
 
+## Known limitations
+
+- **Playlist length:** Spotify's public page lists about 100 tracks per playlist, so larger playlists may be shortened.
+- **Release year:** Spotify's public page does not include a release year for albums and playlists, so only single-track links get a year tag.
+- **Playlist cover art:** playlist tracks use the matched track's artwork, because Spotify does not expose per-track covers publicly.
+- **Metadata source:** TuneFetch reads Spotify's public embed page, which is unofficial and could change without notice.
+- **Local use only:** there is no authentication and it runs on Flask's development server, so don't expose it to the public internet.
+
 ## Project structure
 
 ```
@@ -167,12 +195,17 @@ TuneFetch/
 ├── static/
 │   ├── css/style.css   # Styles
 │   └── js/app.js       # Front-end logic
-└── docs/               # GitHub Pages website and assets
+├── docs/               # GitHub Pages website, screenshots and assets
+└── .github/            # Issue and pull request templates
 ```
 
 ## Tech stack
 
 [Python](https://python.org) · [Flask](https://flask.palletsprojects.com) · [yt-dlp](https://github.com/yt-dlp/yt-dlp) · [ytmusicapi](https://github.com/sigma67/ytmusicapi) · [mutagen](https://github.com/quodlibet/mutagen) · [ffmpeg](https://ffmpeg.org/)
+
+## Acknowledgements
+
+TuneFetch stands on the shoulders of excellent open-source projects: [yt-dlp](https://github.com/yt-dlp/yt-dlp), [ytmusicapi](https://github.com/sigma67/ytmusicapi), [mutagen](https://github.com/quodlibet/mutagen), [Flask](https://flask.palletsprojects.com) and [ffmpeg](https://ffmpeg.org/). Thank you to their maintainers.
 
 ## Contributing
 

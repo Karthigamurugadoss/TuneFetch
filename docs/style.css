@@ -321,3 +321,13 @@ input[type=checkbox]:checked::after { content: ''; width: 4px; height: 8px; bord
 .fmt span { font-size: 14px; color: var(--text-soft); }
 @media (max-width: 960px) { .formats { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 620px) { .formats { grid-template-columns: 1fr; } }
+
+/* ---------- Screenshot gallery ---------- */
+.shots { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.shot { margin: 0; background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01)), var(--surface); border: 1px solid var(--line-strong); border-radius: 20px; padding: 14px; box-shadow: var(--shadow-lg); }
+.shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); }
+.shot img.gap { margin-top: 18px; }
+.shot figcaption { font-size: 13.5px; color: var(--text-soft); text-align: center; padding: 12px 6px 4px; }
+.shot-wide { grid-column: 1 / -1; }
+.shot-phone img { max-width: 300px; margin: 0 auto; }
+@media (max-width: 760px) { .shots { grid-template-columns: 1fr; } }
