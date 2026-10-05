@@ -1,0 +1,2 @@
+# Keep the GitHub Pages copy under docs/ out of the repo language statistics
+docs/** linguist-documentation
