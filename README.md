@@ -78,7 +78,7 @@ It needs **no Spotify account, no Premium subscription and no API keys**. Everyt
 - **Pick your tracks** — preview a playlist or album and untick the songs you don't want
 - **Smart song matching** — picks the closest match by title and duration
 - **Fast parallel downloads** — three tracks at a time, with live per-track progress
-- **Cancel and retry** — stop any time and retry only the tracks that failed
+- **Cancel and retry** — stop any time and retry only the tracks that failed; each failed track is also retried once automatically
 - **Download as ZIP** — grab a whole album or playlist in a single archive
 - **Modern, responsive web UI** — works on desktop and mobile browsers
 - **Automatic cleanup** — download folders older than 24 hours are removed on startup and whenever a new download starts

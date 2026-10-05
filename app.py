@@ -46,6 +46,8 @@ FORMATS = {
 }
 BITRATES = {"128", "192", "256", "320"}
 
+ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
+
 jobs = {}
 jobs_lock = threading.Lock()
 _local = threading.local()
@@ -338,7 +340,7 @@ def download_track(job, idx):
     except Cancelled:
         state["status"] = "cancelled"
     except Exception as e:
-        msg = str(e).replace("ERROR: ", "")
+        msg = ANSI_RE.sub("", str(e)).replace("ERROR: ", "")
         state.update(status="failed", error=msg[:200] or "Unknown error")
     finally:
         for leftover in glob.glob(os.path.join(job["dir"], f"_{idx}.*")):
@@ -352,6 +354,14 @@ def run_job(job, indices):
     job["status"] = "downloading"
     with ThreadPoolExecutor(max_workers=MAX_PARALLEL) as pool:
         list(pool.map(lambda i: download_track(job, i), indices))
+
+    # One automatic retry for tracks that failed, since errors like HTTP 403 are often transient
+    failed = [i for i in indices if job["states"][i]["status"] == "failed"]
+    if failed and not job["cancel"].is_set():
+        for i in failed:
+            job["states"][i].update(status="queued", progress=0, error=None)
+        with ThreadPoolExecutor(max_workers=MAX_PARALLEL) as pool:
+            list(pool.map(lambda i: download_track(job, i), failed))
     finish_job(job)
 
 
