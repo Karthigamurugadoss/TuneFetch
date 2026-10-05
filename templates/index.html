@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuneFetch</title>
+    <meta name="description" content="TuneFetch turns Spotify songs, albums and playlists into tagged audio files with cover art.">
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%2315130f'/%3E%3Cpath d='M12 8v11.2a3.2 3.2 0 1 0 2 2.9V13l7-1.6v5.8a3.2 3.2 0 1 0 2 2.9V8.2z' fill='%23f6f4ee'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- ═════════ Header ═════════ -->
+<header class="site-header">
+    <div class="container header-inner">
+        <a class="logo" href="#top" aria-label="TuneFetch home">
+            <span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V8.2l8-1.8v6.9a3.5 3.5 0 1 0 2 3.2V3z"/></svg></span>
+            <span>Tune<em>Fetch</em></span>
+        </a>
+        <nav class="main-nav" aria-label="Main">
+            <a href="#how">How it works</a>
+            <a href="#features">Features</a>
+            <a href="#faq">FAQ</a>
+            <a class="nav-cta" href="#tool">Get started</a>
+        </nav>
+    </div>
+</header>
+
+<main id="top">
+
+    <!-- ═════════ Hero ═════════ -->
+    <section class="hero">
+        <div class="container hero-grid">
+
+            <div class="hero-copy">
+                <span class="kicker">Spotify to audio file</span>
+                <h1>Your playlists, <span class="mark">saved</span> for offline listening.</h1>
+                <p class="lead">Paste a Spotify link, choose a format, and TuneFetch hands you clean, tagged audio files with cover art. One song or an entire playlist.</p>
+
+                <ul class="hero-points">
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Songs, albums and playlists, or many links at once</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Choose exactly which tracks you want</li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Title, artist, year and artwork written into every file</li>
+                </ul>
+
+                <div class="hero-stats">
+                    <div><b>4</b><span>audio formats</span></div>
+                    <div><b>320k</b><span>max bitrate</span></div>
+                    <div><b>3&times;</b><span>parallel</span></div>
+                </div>
+            </div>
+
+            <!-- ═════════ Tool ═════════ -->
+            <div id="tool">
+                <div class="tool">
+                    <div class="tabs" role="tablist">
+                        <button class="tab active" id="tabSingle" role="tab" onclick="setMode('single')">Single link</button>
+                        <button class="tab" id="tabBulk" role="tab" onclick="setMode('bulk')">Bulk</button>
+                    </div>
+
+                    <div class="tool-body">
+                        <div class="tool-head">
+                            <h2>Download music</h2>
+                            <span class="tag" id="typeTag" hidden></span>
+                        </div>
+
+                        <div id="singleWrap">
+                            <label class="field-label" for="urlInput">Spotify link</label>
+                            <div class="input-wrap">
+                                <input type="text" id="urlInput" placeholder="https://open.spotify.com/track/..." autocomplete="off" spellcheck="false">
+                                <button class="clear-btn" id="clearBtn" title="Clear" aria-label="Clear">&times;</button>
+                            </div>
+                        </div>
+
+                        <div id="bulkWrap" style="display:none">
+                            <label class="field-label" for="bulkInput">Spotify links, one per line</label>
+                            <textarea id="bulkInput" placeholder="https://open.spotify.com/track/...&#10;https://open.spotify.com/album/...&#10;https://open.spotify.com/playlist/..." spellcheck="false"></textarea>
+                        </div>
+                        <div class="hint" id="hint" aria-live="polite"></div>
+
+                        <div class="grid2">
+                            <div>
+                                <label class="field-label" for="formatSel">Format</label>
+                                <select id="formatSel">
+                                    <option value="mp3">MP3</option>
+                                    <option value="m4a">M4A (AAC)</option>
+                                    <option value="flac">FLAC</option>
+                                    <option value="wav">WAV</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="field-label" for="bitrateSel">Quality</label>
+                                <select id="bitrateSel">
+                                    <option value="320">320 kbps &middot; best</option>
+                                    <option value="256">256 kbps</option>
+                                    <option value="192">192 kbps</option>
+                                    <option value="128">128 kbps &middot; smallest</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn btn-ghost" id="viewBtn" onclick="handleView()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                <span>Preview</span>
+                            </button>
+                            <button class="btn btn-primary" id="dlBtn" onclick="handleDownload()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/></svg>
+                                <span>Download</span>
+                            </button>
+                        </div>
+
+                        <div class="alert" id="ffmpegAlert"><b>ffmpeg is not installed.</b> It is needed to convert audio. Run <code>winget install Gyan.FFmpeg</code> in a terminal, then restart TuneFetch.</div>
+                    </div>
+                </div>
+
+                <!-- Preview -->
+                <div class="section" id="previewSection">
+                    <div class="card">
+                        <div class="preview">
+                            <img class="thumb" id="pvThumb" src="" alt="Cover art">
+                            <div class="preview-text">
+                                <div class="preview-title" id="pvTitle"></div>
+                                <div class="preview-sub" id="pvSub"></div>
+                                <div class="preview-tags" id="pvTags"></div>
+                            </div>
+                        </div>
+
+                        <div class="embed" id="embedBox"><iframe id="embedPlayer" title="Spotify player" src="" height="152" allow="encrypted-media" loading="lazy"></iframe></div>
+
+                        <div id="pickerBox" style="display:none">
+                            <div class="picker-head">
+                                <label><input type="checkbox" id="selAll" checked> Select all</label>
+                                <span><b id="selCount">0</b> selected</span>
+                            </div>
+                            <ul class="track-list" id="trackPicker"></ul>
+                        </div>
+
+                        <a class="open-link" id="openLink" href="#" target="_blank" rel="noopener">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3zM5 5h6v2H5v12h12v-6h2v8H3V5z" transform="translate(0 -1)"/></svg>
+                            Open in Spotify
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="section" id="dlSection">
+                    <div class="card">
+                        <div class="dl-head">
+                            <div class="dl-icon" id="dlIcon"><div class="ring"></div></div>
+                            <div class="grow">
+                                <div class="dl-title" id="dlTitle">Preparing...</div>
+                                <div class="dl-sub" id="dlSub">Reading your link</div>
+                            </div>
+                            <button class="btn btn-danger btn-sm" id="cancelBtn" onclick="cancelJob()">Cancel</button>
+                        </div>
+                        <div class="bar-wrap">
+                            <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+                            <span class="bar-count" id="barCount">0 / 0</span>
+                        </div>
+                        <ul class="file-list" id="fileList"></ul>
+                        <div class="actions" id="actions" style="display:none">
+                            <button class="btn btn-primary btn-sm" id="zipBtn" onclick="downloadZip()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/></svg>Download all (ZIP)
+                            </button>
+                            <button class="btn btn-ghost btn-sm" id="retryBtn" onclick="retryFailed()" style="display:none">Retry failed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═════════ How it works ═════════ -->
+    <section class="section-block alt" id="how">
+        <div class="container">
+            <div class="section-title">
+                <span class="kicker">How it works</span>
+                <h2>From link to library in three steps.</h2>
+            </div>
+            <div class="steps">
+                <div class="step"><h3>Paste a link</h3><p>Copy any Spotify song, album or playlist link and drop it in. Use Bulk mode for several at once.</p></div>
+                <div class="step"><h3>Choose your format</h3><p>Pick MP3, M4A, FLAC or WAV and a quality level. Preview a playlist and untick tracks you don't need.</p></div>
+                <div class="step"><h3>Download</h3><p>Watch each track finish, save them one by one, or grab everything in a single ZIP.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═════════ Features ═════════ -->
+    <section class="section-block" id="features">
+        <div class="container">
+            <div class="section-title">
+                <span class="kicker">Features</span>
+                <h2>Everything a music library needs. Nothing it doesn't.</h2>
+            </div>
+            <div class="feat-grid">
+                <div class="feat">
+                    <div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h10v2H4z"/></svg></div>
+                    <h3>Songs, albums, playlists</h3>
+                    <p>One tool for every kind of Spotify link, single or in bulk.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                    <h3>Pick your tracks</h3>
+                    <p>Preview a playlist and select only the songs you want to keep.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 4a5 5 0 110 10 5 5 0 010-10zm0 3a2 2 0 100 4 2 2 0 000-4z"/></svg></div>
+                    <h3>Tagged &amp; organised</h3>
+                    <p>Title, artist, year, track number and cover art are saved in each file.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h4v14H3zm7-2h4v18h-4zm7 6h4v10h-4z"/></svg></div>
+                    <h3>Four formats</h3>
+                    <p>MP3 and M4A up to 320 kbps, plus FLAC and WAV containers.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div>
+                    <h3>Fast &amp; parallel</h3>
+                    <p>Three tracks download at the same time, with live progress for each.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65 6.35A8 8 0 104 12h2a6 6 0 111.76 4.24L10 14H3v7l2.35-2.35A8 8 0 1017.65 6.35z"/></svg></div>
+                    <h3>Cancel &amp; retry</h3>
+                    <p>Stop any time, and retry only the tracks that failed. No starting over.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═════════ FAQ ═════════ -->
+    <section class="section-block alt" id="faq">
+        <div class="container">
+            <div class="section-title">
+                <span class="kicker">FAQ</span>
+                <h2>Good to know.</h2>
+            </div>
+            <div class="faq">
+                <details>
+                    <summary>Where does the audio come from?</summary>
+                    <p>TuneFetch reads track details from Spotify, then finds the best matching audio on YouTube by title and duration. Quality depends on that source, so FLAC and WAV are lossless containers but cannot add detail that isn't there.</p>
+                </details>
+                <details>
+                    <summary>Is there a playlist size limit?</summary>
+                    <p>Spotify's public page lists up to about 100 tracks per playlist, so very large playlists may be shortened.</p>
+                </details>
+                <details>
+                    <summary>Why does it ask for ffmpeg?</summary>
+                    <p>ffmpeg converts the downloaded audio into your chosen format. Install it once with <code>winget install Gyan.FFmpeg</code> and restart the app.</p>
+                </details>
+                <details>
+                    <summary>Where are my files stored?</summary>
+                    <p>Files are created in the <code>downloads</code> folder next to the app, grouped by job, and removed automatically after 24 hours.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- ═════════ Footer ═════════ -->
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <a class="logo" href="#top"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V8.2l8-1.8v6.9a3.5 3.5 0 1 0 2 3.2V3z"/></svg></span><span>Tune<em>Fetch</em></span></a>
+        <p>For personal use only. Download music you have the right to, and support the artists you love. TuneFetch is not affiliated with Spotify.</p>
+    </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

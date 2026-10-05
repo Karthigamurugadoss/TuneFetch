@@ -1,0 +1,4 @@
+flask
+yt-dlp
+ytmusicapi
+mutagen
