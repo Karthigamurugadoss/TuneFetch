@@ -70,8 +70,19 @@ $('bulkInput').addEventListener('input', onBulkInput);
 $('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleView(); });
 $('clearBtn').addEventListener('click', () => { $('urlInput').value = ''; onSingleInput(); resetResults(); $('urlInput').focus(); });
 $('formatSel').addEventListener('change', () => {
-    const lossless = ['flac', 'wav'].includes($('formatSel').value);
-    $('bitrateSel').disabled = lossless;
+    const fmt = $('formatSel').value;
+    $('bitrateSel').disabled = ['flac', 'wav'].includes(fmt);
+    document.querySelectorAll('#formatSeg .seg-btn').forEach(b => {
+        const on = b.dataset.v === fmt;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-checked', on);
+    });
+});
+$('formatSeg').addEventListener('click', e => {
+    const btn = e.target.closest('.seg-btn');
+    if (!btn) return;
+    $('formatSel').value = btn.dataset.v;
+    $('formatSel').dispatchEvent(new Event('change'));
 });
 
 /* ═══ Preview ═══ */

@@ -558,6 +558,7 @@ def get_zip(job_id):
 
 if __name__ == "__main__":
     cleanup_old_jobs()
-    print(" * TuneFetch running at http://127.0.0.1:5000")
+    port = int(os.environ.get("PORT", 5000))
+    print(f" * TuneFetch running at http://127.0.0.1:{port}")
     print(f" * ffmpeg: {FFMPEG_DIR or 'NOT FOUND - install it with: winget install Gyan.FFmpeg'}")
-    app.run(debug=False, threaded=True)
+    app.run(port=port, debug=False, threaded=True)
