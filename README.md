@@ -66,6 +66,7 @@ It needs **no Spotify account, no Premium subscription and no API keys**. Everyt
 - [Tech stack](#tech-stack)
 - [Acknowledgements](#acknowledgements)
 - [Contributing](#contributing)
+- [Author](#author)
 - [License](#license)
 
 ## Features
@@ -212,6 +213,10 @@ TuneFetch stands on the shoulders of excellent open-source projects: [yt-dlp](ht
 Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), then fork the repo, create a branch and open a pull request. Found a bug or have an idea? [Open an issue](https://github.com/Karthigamurugadoss/TuneFetch/issues/new/choose).
 
 If TuneFetch is useful to you, please consider giving it a ⭐ — it helps other people find the project.
+
+## Author
+
+Built by [Karthigamurugadoss](https://github.com/Karthigamurugadoss).
 
 ## License
 
